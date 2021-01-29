@@ -3,16 +3,17 @@ import {StyleSheet, Text, View, Dimensions} from 'react-native';
 const {width} = Dimensions.get('screen');
 import Tab from './Tab';
 
-const TabBar = ({state, navigation}) => {
-  const [selected, setSelected] = useState('Home');
+const TabBar = ({state, navigation, options}) => {
+  console.log(options)
+  const [selected, setSelected] = useState('Today');
   const {routes} = state;
   const renderColor = (currentTab) =>
-    currentTab === selected ? 'red' : 'black';
+    currentTab === selected ? '#f2582e' : 'gray';
 
   const handlePress = (activeTab, index) => {
-      if (state.index!== index) {
+      if (state.index !== index) {
         setSelected(activeTab);
-        navigation.navigate(activeTab);
+        navigation.navigate(activeTab, city);
       }
     
   };
@@ -36,17 +37,21 @@ const TabBar = ({state, navigation}) => {
 };
 const styles = StyleSheet.create({
   wrapper: {
-    position: 'absolute',
-    bottom: 0,
+    // position: 'relative',
+    bottom: 5,
     width,
     alignItems: 'center',
     justifyContent: 'center',
   },
   container: {
     flexDirection: 'row',
-    // backgroundColor:'#fff',
+    backgroundColor:'#fff',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    width: 250,
+    width:'85%',
+    borderRadius: 100,
+    elevation: 2,
+    
   },
 });
 

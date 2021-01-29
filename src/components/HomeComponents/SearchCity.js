@@ -24,7 +24,7 @@ const SearchCity = ({ searchCity }) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: 60,
+    height: 40,
     paddingTop: 5,
     margin: 15,
     textAlign: "center",

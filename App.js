@@ -13,14 +13,14 @@ const App = () => {
     <NavigationContainer>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
         <Tab.Screen
-          name="Home"
+          name="Today"
           component={HomeScreen}
-          initialParams={{icon: 'home'}}
+          initialParams={{icon: 'calendar-today'}}
         />
         <Tab.Screen
           name="Weekly"
           component={WeeklyScreen}
-          initialParams={{icon: 'sun'}}
+          initialParams={{icon: 'calendar-week'}}
         />
       </Tab.Navigator>
     </NavigationContainer>
