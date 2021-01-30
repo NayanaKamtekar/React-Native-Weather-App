@@ -8,26 +8,36 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {getWeatherByCityName} from '../services/index';
+import {getWeatherByCityName, forecastFor7days} from './services/index';
 import SearchCity from './HomeComponents/SearchCity';
 import List from './HomeComponents/List';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({setDailyWeather}) => {
   const [city, setCity] = useState('Copenhagen');
-  const [cityWeather, setCityWeather] = useState({});
+  const [cityWeather, setCityWeather] = useState(null);
   const [sunRise, setSunRise] = useState('');
   const [sunSet, setSunSet] = useState('');
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
+  const [hourlyWeather, setHourlyWeather] = useState(null);
 
   const searchCity = (text) => {
     setCity(text);
   };
 
+  // for (i=0; i<weather?.hourly.length; i++) {
+  //   console.log(new Date((weather?.hourly?.[i]?.dt + weather?.timezone_offset) * 1000)
+  //   .toISOString()
+  //   .substr(11, 5));
+  // }
+
   useEffect(() => {
     (async () => {
       try {
         const weather = await getWeatherByCityName(city);
-        console.log(weather);
         setCityWeather(weather);
+        setLat(weather?.coord?.lat);
+        setLon(weather?.coord?.lon);
         setSunRise(
           new Date((weather?.sys?.sunrise + weather?.timezone) * 1000)
             .toISOString()
@@ -43,6 +53,30 @@ export const HomeScreen = () => {
       }
     })();
   }, [city]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const weather = await forecastFor7days(lat, lon);
+        // console.log("======Weekly weather=====");
+        // for (i=0; i<weather?.daily.length; i++) {
+        //   console.log(new Date((weather?.daily?.[i]?.dt + weather?.timezone_offset) * 1000)
+        //   .toDateString(), weather?.daily?.[i]?.temp);
+        // }
+        setHourlyWeather({'timezone_offset': weather?.timezone_offset, 'hourly': weather?.hourly});
+        setDailyWeather({'timezone_offset': weather?.timezone_offset, 'daily': weather?.daily});
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [lat, lon]);
+
+  // const openDtails = useCallback(() => {
+  //   navigation.navigate('Weekly',{
+  //     city: cityWeather?.name,
+  //     pressure: cityWeather?.main?.pressure,
+  //   })
+  // })
 
   const handleDateTime = () => {
     let tzoffset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -97,8 +131,6 @@ export const HomeScreen = () => {
           </Text>
           <Text style={styles.celcius}>℃</Text>
         </View>
-
-        {/* <Text style={styles.cityTemp}> {Math.round(parseFloat(cityWeather?.main?.temp))}℃</Text> */}
 
         <List
           allRowMembers={[

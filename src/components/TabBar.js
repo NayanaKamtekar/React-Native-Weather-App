@@ -4,18 +4,26 @@ const {width} = Dimensions.get('screen');
 import Tab from './Tab';
 
 const TabBar = ({state, navigation, options}) => {
-  console.log(options)
+
   const [selected, setSelected] = useState('Today');
   const {routes} = state;
   const renderColor = (currentTab) =>
     currentTab === selected ? '#f2582e' : 'gray';
 
   const handlePress = (activeTab, index) => {
-      if (state.index !== index) {
-        setSelected(activeTab);
-        navigation.navigate(activeTab, city);
-      }
-    
+    if (state.index !== index) {
+      setSelected(activeTab);
+      navigation.navigate(activeTab);
+      // if (activeTab === 'Today') {
+      //   navigation.navigate('Weekly', {
+      //     city: cityWeather?.name,
+      //     pressure: cityWeather?.main?.pressure,
+      //   });
+      // }
+      // if (activeTab === 'Weekly') {
+      //   navigation.navigate('Today');
+      // }
+    }
   };
 
   return (
@@ -24,7 +32,6 @@ const TabBar = ({state, navigation, options}) => {
         {routes.map((route, index) => (
           <Tab
             tab={route}
-              
             icon={route.params.icon}
             onPress={() => handlePress(route.name, index)}
             color={renderColor(route.name)}
@@ -45,13 +52,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'row',
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width:'85%',
+    width: '85%',
     borderRadius: 100,
     elevation: 2,
-    
   },
 });
 

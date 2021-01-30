@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -9,17 +9,22 @@ import TabBar from './src/components/TabBar';
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+  const [dailyWeather, setDailyWeather] = useState();
+
+  console.log('===In App.js==')
+  console.log(dailyWeather)
+
   return (
     <NavigationContainer>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
         <Tab.Screen
           name="Today"
-          component={HomeScreen}
+          children={() => (<HomeScreen setDailyWeather={setDailyWeather} />)}
           initialParams={{icon: 'calendar-today'}}
         />
         <Tab.Screen
           name="Weekly"
-          component={WeeklyScreen}
+          children={() => <WeeklyScreen dailyWeather={dailyWeather} />}
           initialParams={{icon: 'calendar-week'}}
         />
       </Tab.Navigator>
