@@ -3,14 +3,10 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 // import { FlatList } from 'react-native-gesture-handler';
 
 const WeekRow = ({dateMonth, day, iconName, min, max}) => {
-  // const date = new Date( (dt + timezoneOffset) * 1000)
-  // const dayOrdinal = date.getDate()
-  // const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  // const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{dateMonth}</Text>
-      <Text style={styles.text}>{day}</Text>
+      <Text style={styles.textDate}>{dateMonth}</Text>
+      <Text style={styles.textDay}>{day}</Text>
       <View style={styles.weatherImgView}>
         <Image
           source={{
@@ -19,8 +15,8 @@ const WeekRow = ({dateMonth, day, iconName, min, max}) => {
           style={styles.weatherImg}
         />
       </View>
-      <Text style={styles.text}>{min}</Text>
-      <Text style={styles.text}>{max}</Text>
+      <Text style={styles.textMin}>{min}</Text>
+      <Text style={styles.textMax}>{max}</Text>
     </View>
   );
 };
@@ -30,24 +26,59 @@ export default WeekRow;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'space-between'
+    justifyContent: 'center',
+    alignContent: 'center',
+    padding: 10,
   },
   weatherImgView: {
     flex: 1,
-    height: 50,
-    justifyContent: 'center',
+    height: 40,
+    justifyContent: 'flex-start',
+    backgroundColor: "#99ddff",
+    backgroundColor:'#abdbe3',
+    borderRadius: 30,
+
   },
 
   weatherImg: {
     flex: 1,
-    height: 50,
+    height: 40,
     resizeMode: 'contain',
   },
 
   text: {
-      flex: 1,
-      justifyContent: 'center', 
-
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'center',
+    padding: 10,
+    color: "#232363",
+  },
+  textMin: {
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'right',
+    padding: 10,
+    color: "#232363",
+  },
+  textMax: {
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'left',
+    padding: 10,
+    color: "#232363",
+  },
+  textDate: {
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'center',
+    padding: 10,
+    color: "#232363"
+  },
+  textDay: {
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'left',
+    padding: 10,
+    color: "#232363"
   }
 });

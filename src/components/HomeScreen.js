@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import {getWeatherByCityName, forecastFor7days} from './services/index';
@@ -21,15 +22,6 @@ export const HomeScreen = ({setDailyWeather}) => {
   const [lon, setLon] = useState('');
   const [hourlyWeather, setHourlyWeather] = useState(null);
 
-  const searchCity = (text) => {
-    setCity(text);
-  };
-
-  // for (i=0; i<weather?.hourly.length; i++) {
-  //   console.log(new Date((weather?.hourly?.[i]?.dt + weather?.timezone_offset) * 1000)
-  //   .toISOString()
-  //   .substr(11, 5));
-  // }
 
   useEffect(() => {
     (async () => {
@@ -49,6 +41,7 @@ export const HomeScreen = ({setDailyWeather}) => {
             .substr(11, 5),
         );
       } catch (error) {
+        Alert.alert("Alert", "City not found",[{text: "OK"}])
         console.log(error);
       }
     })();
@@ -58,11 +51,6 @@ export const HomeScreen = ({setDailyWeather}) => {
     (async () => {
       try {
         const weather = await forecastFor7days(lat, lon);
-        // console.log("======Weekly weather=====");
-        // for (i=0; i<weather?.daily.length; i++) {
-        //   console.log(new Date((weather?.daily?.[i]?.dt + weather?.timezone_offset) * 1000)
-        //   .toDateString(), weather?.daily?.[i]?.temp);
-        // }
         setHourlyWeather({'timezone_offset': weather?.timezone_offset, 'hourly': weather?.hourly});
         setDailyWeather({'timezone_offset': weather?.timezone_offset, 'daily': weather?.daily});
       } catch (error) {
@@ -71,12 +59,6 @@ export const HomeScreen = ({setDailyWeather}) => {
     })();
   }, [lat, lon]);
 
-  // const openDtails = useCallback(() => {
-  //   navigation.navigate('Weekly',{
-  //     city: cityWeather?.name,
-  //     pressure: cityWeather?.main?.pressure,
-  //   })
-  // })
 
   const handleDateTime = () => {
     let tzoffset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -107,7 +89,7 @@ export const HomeScreen = ({setDailyWeather}) => {
   return (
     <ScrollView style={styles.container}>
       <ImageBackground source={backgroundImage} style={styles.image}>
-        <SearchCity searchCity={searchCity} />
+        <SearchCity searchCity={setCity} city={city}/>
 
         {handleDateTime()}
         <View style={styles.weatherImgView}>

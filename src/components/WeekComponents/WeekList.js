@@ -4,16 +4,18 @@ import WeekRow from './WeekRow';
 
 const WeekList = ({timezone_offset, daily}) => {
   let weekRow = daily.map((elem, index) => {
+
     const date = new Date((elem.dt + timezone_offset) * 1000);
-    const dayOrdinal = date.getDate();
+    const dayOrdinal = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const dateMonth = `${dayOrdinal}/${month}`;
     const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
       date.getDay()
     ];
     const iconName = elem?.weather?.[0]?.icon;
-    const min = elem?.temp?.min;
-    const max = elem?.temp?.max;
+    const min = `${Math.round(parseFloat(elem?.temp?.min))} °C`;
+
+    const max = `${Math.round(parseFloat(elem?.temp?.max))} °C`;
 
     return (
       <WeekRow
@@ -27,17 +29,16 @@ const WeekList = ({timezone_offset, daily}) => {
     );
   });
 
-  return (
-    <View style={styles.container}>
-      {weekRow}
-    </View>
-  );
+  return <View style={styles.container}>{weekRow}</View>;
 };
 
 export default WeekList;
 
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-    }
+  container: {
+    // backgroundColor:'lightgray',
+    margin:10,
+    flex: 10,
+    justifyContent: 'flex-start',
+  },
 });
