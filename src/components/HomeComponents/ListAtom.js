@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/dist/Feather";
 function ListAtom({ measureName, measureValue, measureIcon }) {
   return (
     <View style={styles.listItemView}>
-      <Icon name={measureIcon} size={22} color="red" />
+      <Icon name={measureIcon} size={22} color="#b5245c" />
       <View style={styles.measurementView}>
         <Text style={styles.listItemText}>{measureName}</Text>
         <Text>{measureValue}</Text>

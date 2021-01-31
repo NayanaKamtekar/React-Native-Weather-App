@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 
-const SearchCity = ({ searchCity }) => {
+const SearchCity = ({ searchCity, city }) => {
   const [text, setText] = useState("Copenhagen");
 
   return (
@@ -12,7 +12,7 @@ const SearchCity = ({ searchCity }) => {
         onChangeText={(text) => setText(text)}
         value={text}
         onSubmitEditing={() => {
-          searchCity(text);
+          searchCity(text.trim());
         }}
         onFocus={() => {
           setText("");
@@ -24,7 +24,7 @@ const SearchCity = ({ searchCity }) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: 60,
+    height: 50,
     paddingTop: 5,
     margin: 15,
     textAlign: "center",

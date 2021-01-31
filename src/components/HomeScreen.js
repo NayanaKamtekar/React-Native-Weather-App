@@ -6,28 +6,30 @@ import {
   Image,
   ImageBackground,
   ScrollView,
+  Alert,
 } from 'react-native';
 
-import {getWeatherByCityName} from '../services/index';
+import {getWeatherByCityName, forecastFor7days} from './services/index';
 import SearchCity from './HomeComponents/SearchCity';
 import List from './HomeComponents/List';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({setDailyWeather}) => {
   const [city, setCity] = useState('Copenhagen');
-  const [cityWeather, setCityWeather] = useState({});
+  const [cityWeather, setCityWeather] = useState(null);
   const [sunRise, setSunRise] = useState('');
   const [sunSet, setSunSet] = useState('');
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
+  const [hourlyWeather, setHourlyWeather] = useState(null);
 
-  const searchCity = (text) => {
-    setCity(text);
-  };
 
   useEffect(() => {
     (async () => {
       try {
         const weather = await getWeatherByCityName(city);
-        console.log(weather);
         setCityWeather(weather);
+        setLat(weather?.coord?.lat);
+        setLon(weather?.coord?.lon);
         setSunRise(
           new Date((weather?.sys?.sunrise + weather?.timezone) * 1000)
             .toISOString()
@@ -39,10 +41,24 @@ export const HomeScreen = () => {
             .substr(11, 5),
         );
       } catch (error) {
+        Alert.alert("Alert", "City not found",[{text: "OK"}])
         console.log(error);
       }
     })();
   }, [city]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const weather = await forecastFor7days(lat, lon);
+        setHourlyWeather({'timezone_offset': weather?.timezone_offset, 'hourly': weather?.hourly});
+        setDailyWeather({'timezone_offset': weather?.timezone_offset, 'daily': weather?.daily});
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [lat, lon]);
+
 
   const handleDateTime = () => {
     let tzoffset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -73,7 +89,7 @@ export const HomeScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <ImageBackground source={backgroundImage} style={styles.image}>
-        <SearchCity searchCity={searchCity} />
+        <SearchCity searchCity={setCity} city={city}/>
 
         {handleDateTime()}
         <View style={styles.weatherImgView}>
@@ -97,8 +113,6 @@ export const HomeScreen = () => {
           </Text>
           <Text style={styles.celcius}>℃</Text>
         </View>
-
-        {/* <Text style={styles.cityTemp}> {Math.round(parseFloat(cityWeather?.main?.temp))}℃</Text> */}
 
         <List
           allRowMembers={[
