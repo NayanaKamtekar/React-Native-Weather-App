@@ -11,9 +11,6 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   const [dailyWeather, setDailyWeather] = useState();
 
-  console.log('===In App.js==')
-  console.log(dailyWeather)
-
   return (
     <NavigationContainer>
       <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>

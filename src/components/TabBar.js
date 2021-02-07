@@ -14,15 +14,6 @@ const TabBar = ({state, navigation, options}) => {
     if (state.index !== index) {
       setSelected(activeTab);
       navigation.navigate(activeTab);
-      // if (activeTab === 'Today') {
-      //   navigation.navigate('Weekly', {
-      //     city: cityWeather?.name,
-      //     pressure: cityWeather?.main?.pressure,
-      //   });
-      // }
-      // if (activeTab === 'Weekly') {
-      //   navigation.navigate('Today');
-      // }
     }
   };
 
