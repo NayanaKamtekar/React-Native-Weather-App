@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Suspense} from 'react';
 import {
   StyleSheet,
   View,
@@ -12,6 +12,7 @@ import {
 import {getWeatherByCityName, forecastFor7days} from './services/index';
 import SearchCity from './HomeComponents/SearchCity';
 import List from './HomeComponents/List';
+import HourlyRow from './HomeComponents/HourlyRow';
 
 export const HomeScreen = ({setDailyWeather}) => {
   const [city, setCity] = useState('Copenhagen');
@@ -20,8 +21,7 @@ export const HomeScreen = ({setDailyWeather}) => {
   const [sunSet, setSunSet] = useState('');
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
-  const [hourlyWeather, setHourlyWeather] = useState(null);
-
+  const [hourlyWeather, setHourlyWeather] = useState();
 
   useEffect(() => {
     (async () => {
@@ -41,7 +41,7 @@ export const HomeScreen = ({setDailyWeather}) => {
             .substr(11, 5),
         );
       } catch (error) {
-        Alert.alert("Alert", "City not found",[{text: "OK"}])
+        Alert.alert('Alert', 'City not found', [{text: 'OK'}]);
         console.log(error);
       }
     })();
@@ -51,14 +51,19 @@ export const HomeScreen = ({setDailyWeather}) => {
     (async () => {
       try {
         const weather = await forecastFor7days(lat, lon);
-        setHourlyWeather({'timezone_offset': weather?.timezone_offset, 'hourly': weather?.hourly});
-        setDailyWeather({'timezone_offset': weather?.timezone_offset, 'daily': weather?.daily});
+        setHourlyWeather({
+          timezone_offset: weather?.timezone_offset,
+          hourly: weather?.hourly,
+        });
+        setDailyWeather({
+          timezone_offset: weather?.timezone_offset,
+          daily: weather?.daily,
+        });
       } catch (error) {
         console.log(error);
       }
     })();
   }, [lat, lon]);
-
 
   const handleDateTime = () => {
     let tzoffset = new Date().getTimezoneOffset() * 60 * 1000;
@@ -89,7 +94,7 @@ export const HomeScreen = ({setDailyWeather}) => {
   return (
     <ScrollView style={styles.container}>
       <ImageBackground source={backgroundImage} style={styles.image}>
-        <SearchCity searchCity={setCity} city={city}/>
+        <SearchCity searchCity={setCity} city={city} />
 
         {handleDateTime()}
         <View style={styles.weatherImgView}>
@@ -113,7 +118,10 @@ export const HomeScreen = ({setDailyWeather}) => {
           </Text>
           <Text style={styles.celcius}>℃</Text>
         </View>
-
+        <HourlyRow
+          timezone_offset={hourlyWeather?.timezone_offset}
+          hourly={hourlyWeather?.hourly}
+        />
         <List
           allRowMembers={[
             {
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
   },
   cityDateTime: {
     color: '#232385',
-    
+
     fontSize: 17,
     textAlign: 'center',
     alignItems: 'center',
@@ -177,12 +185,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   celcius: {
-    fontSize: 40,
+    fontSize: 30,
     color: '#232363',
   },
   cityTemp: {
     color: '#232363',
-    fontSize: 80,
+    fontSize: 60,
     textAlign: 'center',
   },
 
@@ -192,12 +200,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   weatherImgView: {
-    height: 190,
-    justifyContent:'center',
+    height: 130,
+    justifyContent: 'center',
   },
 
   weatherImg: {
-    height: 300,
+    height: 200,
     resizeMode: 'contain',
   },
   weatherDes: {
